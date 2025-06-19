@@ -16,3 +16,12 @@
 [submodule "yv3-liquityv2-sp-strategy/lib/tokenized-strategy-periphery"]
 	path = yv3-liquityv2-sp-strategy/lib/tokenized-strategy-periphery
 	url = https://github.com/yearn/tokenized-strategy-periphery
+[submodule "tokenized-strategy/lib/forge-std"]
+	path = tokenized-strategy/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "tokenized-strategy/lib/openzeppelin-contracts"]
+	path = tokenized-strategy/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "tokenized-strategy/lib/erc4626-tests"]
+	path = tokenized-strategy/lib/erc4626-tests
+	url = https://github.com/a16z/erc4626-tests
