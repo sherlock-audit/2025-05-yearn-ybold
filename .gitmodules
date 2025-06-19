@@ -25,3 +25,15 @@
 [submodule "tokenized-strategy/lib/erc4626-tests"]
 	path = tokenized-strategy/lib/erc4626-tests
 	url = https://github.com/a16z/erc4626-tests
+[submodule "tokenized-strategy-periphery/lib/forge-std"]
+	path = tokenized-strategy-periphery/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "tokenized-strategy-periphery/lib/openzeppelin-contracts"]
+	path = tokenized-strategy-periphery/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "tokenized-strategy-periphery/lib/tokenized-strategy"]
+	path = tokenized-strategy-periphery/lib/tokenized-strategy
+	url = https://github.com/yearn/tokenized-strategy
+[submodule "tokenized-strategy-periphery/lib/yearn-vaults-v3"]
+	path = tokenized-strategy-periphery/lib/yearn-vaults-v3
+	url = https://github.com/yearn/yearn-vaults-v3
