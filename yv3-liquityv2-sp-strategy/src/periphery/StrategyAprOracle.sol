@@ -24,6 +24,9 @@ contract StrategyAprOracle is AprOracleBase {
     /// @notice WAD constant
     uint256 private constant WAD = 1e18;
 
+    /// @notice Percentage of interest rate revenue that goes to the Stability Pool
+    uint256 private constant SP_YIELD_SPLIT = 75 * 1e16; // 75%
+
     /// @notice MultiTroveGetter contract
     IMultiTroveGetter public immutable MULTI_TROVE_GETTER;
 
@@ -112,8 +115,8 @@ contract StrategyAprOracle is AprOracleBase {
         if (_bias == 0) _bias = WAD;
 
         // slither-disable-next-line divide-before-multiply
-        return _weightedInterestRate / _totalDebt * _totalDebt / uint256(int256(_stabilityPoolDeposits) + _delta)
-            * _bias / WAD;
+        return (_weightedInterestRate * SP_YIELD_SPLIT / WAD) / uint256(int256(_stabilityPoolDeposits) + _delta) * _bias
+            / WAD;
     }
 
     // ===============================================================

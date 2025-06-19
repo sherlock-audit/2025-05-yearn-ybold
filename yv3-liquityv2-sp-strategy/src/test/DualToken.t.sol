@@ -39,7 +39,7 @@ contract DualTokenTest is Setup {
                 "Yearn BOLD",
                 "yBOLD",
                 management,
-                0 // profitMaxUnlockTime
+                3 days // profitMaxUnlockTime
             )
         );
 
@@ -270,7 +270,13 @@ contract DualTokenTest is Setup {
         assertGt(vault.totalSupply(), _amount, "!totalSupply vault after2");
 
         pricePerShare = vault.pricePerShare();
-        assertApproxEq(pricePerShare, 1 ether, 1, "!pricePerShare vault after2");
+        assertLt(pricePerShare, 1 ether, "!pricePerShare vault after2");
+
+        // Skip profitMaxUnlockTime
+        skip(vault.profitMaxUnlockTime());
+
+        pricePerShare = vault.pricePerShare();
+        assertApproxEq(pricePerShare, 1 ether, 1, "!pricePerShare vault after3");
 
         // Deposit into staker
         depositIntoStaker(IStrategyInterface(address(vault)), staker, user, _amount);

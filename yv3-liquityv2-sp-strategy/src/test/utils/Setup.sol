@@ -6,6 +6,7 @@ import {ExtendedTest} from "./ExtendedTest.sol";
 
 import {LiquityV2SPStrategy as Strategy, ERC20} from "../../Strategy.sol";
 import {StrategyFactory} from "../../StrategyFactory.sol";
+import {AuctionFactory} from "../../periphery/AuctionFactory.sol";
 import {IStrategyInterface} from "../../interfaces/IStrategyInterface.sol";
 import {AggregatorV3Interface} from "../../interfaces/AggregatorV3Interface.sol";
 import {IStabilityPool} from "../../interfaces/IStabilityPool.sol";
@@ -35,6 +36,7 @@ contract Setup is ExtendedTest, IEvents {
     IStrategyInterface public strategy;
 
     StrategyFactory public strategyFactory;
+    AuctionFactory public auctionFactory;
 
     mapping(string => address) public tokenAddrs;
 
@@ -68,7 +70,7 @@ contract Setup is ExtendedTest, IEvents {
     uint256 public profitMaxUnlockTime = 10 days;
 
     function setUp() public virtual {
-        uint256 _blockNumber = 22_518_294; // Caching for faster tests
+        uint256 _blockNumber = 22_627_836; // Caching for faster tests
         vm.selectFork(vm.createFork(vm.envString("ETH_RPC_URL"), _blockNumber));
 
         _setTokenAddrs();
@@ -79,7 +81,9 @@ contract Setup is ExtendedTest, IEvents {
         // Set decimals
         decimals = asset.decimals();
 
-        strategyFactory = new StrategyFactory(management, performanceFeeRecipient, keeper, emergencyAdmin);
+        auctionFactory = new AuctionFactory();
+        strategyFactory =
+            new StrategyFactory(management, performanceFeeRecipient, keeper, emergencyAdmin, address(auctionFactory));
 
         // Deploy strategy and set variables
         strategy = IStrategyInterface(setUpStrategy());
