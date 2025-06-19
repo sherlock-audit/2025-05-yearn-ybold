@@ -32,14 +32,14 @@ contract LV2SPStakerStrategy is BaseHealthCheck {
 
     /// @inheritdoc BaseStrategy
     function _deployFunds(
-        uint256 /* _amount */
+        uint256 /*_amount*/
     ) internal pure override {
         return;
     }
 
     /// @inheritdoc BaseStrategy
     function _freeFunds(
-        uint256 /* _amount */
+        uint256 /*_amount*/
     ) internal pure override {
         return;
     }

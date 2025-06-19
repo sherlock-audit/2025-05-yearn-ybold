@@ -9,6 +9,7 @@ contract StrategyFactory {
     event NewStrategy(address indexed strategy, address indexed asset);
 
     address public immutable emergencyAdmin;
+    address public immutable auctionFactory;
 
     address public management;
     address public performanceFeeRecipient;
@@ -17,11 +18,18 @@ contract StrategyFactory {
     /// @notice Track the deployments. asset => stability pool => strategy
     mapping(address => mapping(address => address)) public deployments;
 
-    constructor(address _management, address _performanceFeeRecipient, address _keeper, address _emergencyAdmin) {
+    constructor(
+        address _management,
+        address _performanceFeeRecipient,
+        address _keeper,
+        address _emergencyAdmin,
+        address _auctionFactory
+    ) {
         management = _management;
         performanceFeeRecipient = _performanceFeeRecipient;
         keeper = _keeper;
         emergencyAdmin = _emergencyAdmin;
+        auctionFactory = _auctionFactory;
     }
 
     modifier onlyManagement() {
@@ -41,7 +49,8 @@ contract StrategyFactory {
         string calldata _name
     ) external virtual onlyManagement returns (address) {
         // tokenized strategies available setters.
-        IStrategyInterface _newStrategy = IStrategyInterface(address(new Strategy(_addressesRegistry, _asset, _name)));
+        IStrategyInterface _newStrategy =
+            IStrategyInterface(address(new Strategy(_addressesRegistry, _asset, auctionFactory, _name)));
 
         _newStrategy.setPerformanceFeeRecipient(performanceFeeRecipient);
 

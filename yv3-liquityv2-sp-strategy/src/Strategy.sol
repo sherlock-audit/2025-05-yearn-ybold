@@ -63,7 +63,7 @@ contract LiquityV2SPStrategy is BaseHealthCheck {
     IAuction public immutable AUCTION;
 
     /// @notice Factory for creating the auction contract
-    IAuctionFactory public constant AUCTION_FACTORY = IAuctionFactory(0xCfA510188884F199fcC6e750764FAAbE6e56ec40);
+    IAuctionFactory public immutable AUCTION_FACTORY;
 
     // ===============================================================
     // Constructor
@@ -71,8 +71,14 @@ contract LiquityV2SPStrategy is BaseHealthCheck {
 
     /// @param _addressesRegistry Address of the AddressesRegistry
     /// @param _asset Address of the strategy's underlying asset
+    /// @param _auctionFactory Address of the AuctionFactory
     /// @param _name Name of the strategy
-    constructor(address _addressesRegistry, address _asset, string memory _name) BaseHealthCheck(_asset, _name) {
+    constructor(
+        address _addressesRegistry,
+        address _asset,
+        address _auctionFactory,
+        string memory _name
+    ) BaseHealthCheck(_asset, _name) {
         COLL_PRICE_ORACLE = IAddressesRegistry(_addressesRegistry).priceFeed();
         (, bool _isOracleDown) = COLL_PRICE_ORACLE.fetchPrice();
         require(!_isOracleDown && COLL_PRICE_ORACLE.priceSource() == IPriceFeed.PriceSource.primary, "!oracle");
@@ -81,6 +87,7 @@ contract LiquityV2SPStrategy is BaseHealthCheck {
         require(SP.boldToken() == _asset, "!sp");
         COLL = ERC20(SP.collToken());
 
+        AUCTION_FACTORY = IAuctionFactory(_auctionFactory);
         AUCTION = AUCTION_FACTORY.createNewAuction(_asset);
         AUCTION.enable(address(COLL));
 
@@ -258,7 +265,10 @@ contract LiquityV2SPStrategy is BaseHealthCheck {
 
         // If base fee is acceptable and there's collateral to sell, tend to minimize exchange rate exposure
         return block.basefee <= maxGasPriceToTend
-            && (isCollateralGainToClaim() || COLL.balanceOf(address(this)) > dustThreshold);
+            && (
+                isCollateralGainToClaim()
+                    || COLL.balanceOf(address(this)) + COLL.balanceOf(address(AUCTION)) > dustThreshold
+            );
     }
 
 }
